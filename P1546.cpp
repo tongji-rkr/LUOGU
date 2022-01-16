@@ -1,0 +1,61 @@
+#include<iostream>
+#include<algorithm>
+#include<cstdio>
+using namespace std;
+
+inline int read()
+{
+	register int x = 0, f = 1; register char c = getchar();
+	while (c < '0' || c>'9') { if (c == '-') f = -1; c = getchar(); }
+	while (c >= '0' && c <= '9') x = (x << 3) + (x << 1) + (c ^ 48), c = getchar();
+	return x * f;
+}
+
+struct EDGE
+{
+	int x, y, v;
+	bool operator <(EDGE& s1)
+	{
+		return v < s1.v;
+	}
+}a[100005];
+int n, t, k;
+int fa[305];
+int ans;
+
+int find(int x)
+{
+	if (fa[x] != x)fa[x] = find(fa[x]);
+	return fa[x];
+}
+int main()
+{
+	int v;
+	n = read();
+	for (int i = 1; i <= n; i++)
+	{
+		for (int j = 1; j <= n; j++)
+		{
+			v = read();
+			if (j <= i)continue;
+			t++;
+			a[t].x = i, a[t].y = j, a[t].v = v;
+		}
+	}
+	sort(a + 1, a + 1 + t);
+	for (int i = 1; i <= n; i++)
+		fa[i] = i;
+	for (int i = 1; i <= t; i++)
+	{
+		if (find(a[i].x) != find(a[i].y))
+		{
+			fa[find(a[i].x)] = find(a[i].y);
+			k++;
+			ans += a[i].v;
+		}
+		if (k == n - 1)
+			break;
+	}
+	cout << ans;
+	return 0;
+}
